@@ -203,7 +203,7 @@ def _translate(isomirs, description):
                 logger.debug("TRANSLATE::change:%s" % description)
                 if nt == "-" or nt == "NA":
                     return "notsure"
-                iso.extend(_iso_snp(int(nt.split(":")[0])))
+                iso.extend(_iso_snp(int(nt.split(":")[0].replace("-$",""))))
         logger.debug("TRANSLATE::iso:%s" % iso)
     return ",".join(iso)
 
