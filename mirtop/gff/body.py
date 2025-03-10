@@ -49,8 +49,9 @@ def read(fn, args):
 
             if cols['start'] not in lines[cols['chrom']]:
                 lines[cols['chrom']][cols['start']] = []
+
             # Handle missing 'Variant' key
-            variant_attr = attr.get('Variant', 'NA')  # Default to 'NA' if missing
+            variant_attr = attr.get('Variant', '')  # Default to 'NA' if missing
             uid = "%s-%s-%s" % (attr['UID'],
                                 variant_attr,
                                 attr['Name'])
