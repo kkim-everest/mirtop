@@ -352,14 +352,16 @@ def variant_with_nt(line, precursors, matures):
     logger.debug("GFF::BODY::precursors %s" % precursors[attr["Parent"]])
     logger.debug("GFF:BODY::mature %s" % matures[attr["Parent"]][attr["Name"]])
 
+    # Handle missing 'Variant' key safely
+    variant = attr.get("Variant", "")  # Default to an empty string if missing
     t5 = variant_to_5p(precursors[attr["Parent"]],
                        matures[attr["Parent"]][attr["Name"]],
-                       attr["Variant"])
+                       variant)
     t3 = variant_to_3p(precursors[attr["Parent"]],
                        matures[attr["Parent"]][attr["Name"]],
-                       attr["Variant"])
+                       variant)
     add = variant_to_add(read,
-                         attr["Variant"])
+                         variant)
     mature_sequence = get_mature_sequence(
         precursors[attr["Parent"]],
         matures[attr["Parent"]][attr["Name"]],
@@ -367,7 +369,7 @@ def variant_with_nt(line, precursors, matures):
     logger.debug("GFF::BODY::mature_sequence %s" % mature_sequence)
     mm = align_from_variants(read,
                              mature_sequence,
-                             attr["Variant"])
+                             variant)
     if mm == "Invalid":
         return mm
     if len(mm) > 0:
