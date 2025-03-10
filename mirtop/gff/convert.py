@@ -59,7 +59,8 @@ def convert_gff_counts(args):
         Read = attr["Read"]
         mirna = attr["Name"]
         parent = attr["Parent"]
-        variant = attr["Variant"]
+        # Handle missing 'Variant' key safely
+        variant = attr.get("Variant", "")  # Default to an empty string if missing
         try:
             read_id(UID)
         except KeyError:
