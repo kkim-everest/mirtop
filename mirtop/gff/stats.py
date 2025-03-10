@@ -75,9 +75,13 @@ def _calc_stats(fn):
             logger.debug("## STATS: attribute %s" % attr)
             if not ok.match(attr['Filter']):
                 continue
-            if "-".join([attr['UID'], attr['Variant'], attr['Name']]) in seen:
+
+            # Handle missing 'Variant' key
+            variant_attr = attr.get('Variant', '')  # Default to 'NA' if missing
+
+            if "-".join([attr['UID'], variant_attr, attr['Name']]) in seen:
                 continue
-            seen.add("-".join([attr['UID'], attr['Variant'], attr['Name']]))
+            seen.add("-".join([attr['UID'], variant_attr, attr['Name']]))
             lines.extend(_classify(cols['type'], attr, samples))
     df = _summary(lines)
     return df
@@ -93,11 +97,13 @@ def _classify(srna_type, attr, samples):
     lines = []
     counts = dict(zip(samples, attr['Expression'].split(",")))
     for s in counts:
+        # Handle missing 'Variant' key
+        variant_attr = attr.get('Variant', '')
         if int(counts[s]) > 0:
             lines.append([srna_type, s, counts[s]])
-        if attr['Variant'].find("iso") == -1:
+        if variant_attr.find("iso") == -1:
             continue
-        for v in attr['Variant'].split(","):
+        for v in variant_attr.split(","):
             if int(counts[s]) > 0:
                 lines.append([v.split(":")[0], s, counts[s]])
     return lines
